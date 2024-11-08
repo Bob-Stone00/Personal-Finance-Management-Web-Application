@@ -1,0 +1,65 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="Login page.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-box">
+        <h2>Login</h2>
+        <form method="post" action="login.php">
+          <div class="input-group">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required />
+          </div>
+          <div class="input-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required />
+          </div>
+          <div class="input-group">
+            <button type="submit">Login</button>
+          </div>
+        </form>
+        <div class="extra-links">
+          <a href="../Register/Registrationpage.html">Create an account</a>
+          <a href="forgot-password.html">Forgot Password?</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal" id="errorModal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">×</span>
+        <p id="errorMessage"></p>
+        <button class="ok-button" onclick="closeModal()">OK</button>
+      </div>
+    </div>
+
+    <script>
+      // Check for errors in the query string and display them
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("error")) {
+        document.getElementById("errorMessage").textContent = params
+          .get("error")
+          .replace(/\+/g, " ");
+        document.getElementById("errorModal").style.display = "block";
+      }
+
+      // Close modal function
+      function closeModal() {
+        document.getElementById("errorModal").style.display = "none";
+      }
+
+      // Close modal when clicking outside of it
+      window.onclick = function (event) {
+        const modal = document.getElementById("errorModal");
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+  </body>
+</html>

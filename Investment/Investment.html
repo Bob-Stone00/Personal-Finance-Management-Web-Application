@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Market Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../Dashboard/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f0f2f5;
+        color: #333;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+      .header h1 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+      .view-link {
+        color: #4caf50;
+        text-decoration: none;
+      }
+      .orders {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      .order-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 15px;
+        width: 23%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        min-width: 250px;
+      }
+      .order-card h3 {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        font-weight: normal;
+      }
+      .order-card .icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+      }
+      .order-card .value {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+      .order-card .change {
+        font-size: 14px;
+      }
+      .order-card .change.positive {
+        color: #4caf50;
+      }
+      .order-card .change.negative {
+        color: #f44336;
+      }
+      .chart-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .chart-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        width: 68%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        flex: 2;
+        min-width: 300px;
+      }
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .chart-title {
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .chart-value {
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .chart-change {
+        color: #4caf50;
+        font-size: 14px;
+      }
+      .chart-date {
+        color: #888;
+        font-size: 12px;
+      }
+      .chart-tabs {
+        display: flex;
+        margin-top: 20px;
+      }
+      .chart-tab {
+        padding: 5px 10px;
+        margin-right: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .chart-tab.active {
+        background-color: #4caf50;
+        color: white;
+      }
+      .details-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        width: 28%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        min-width: 250px;
+      }
+      .details-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .details-title {
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .details-badge {
+        background-color: #e8f5e9;
+        color: #4caf50;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+      }
+      .details-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 14px;
+      }
+      .details-item .label {
+        color: #888;
+      }
+      .market-cap-chart {
+        margin-top: 20px;
+      }
+
+      /* New button styles */
+      .buy-sell-buttons,
+      .crud-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .buy-button,
+      .sell-button,
+      .crud-button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .crud-button {
+        background-color: #2196f3;
+      }
+      .sell-button {
+        background-color: #f44336;
+      }
+      .crud-button.delete {
+        background-color: #f44336;
+      }
+
+      /* Search bar styles */
+      .search-bar {
+        display: flex;
+        width: 100%;
+        max-width: 400px;
+        gap: 10px;
+      }
+
+      .search-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      .search-button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+      }
+
+      @media (max-width: 768px) {
+        .order-card {
+          width: 100%;
+        }
+
+        .chart-card,
+        .details-card {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="sidebar show-sidebar">
+      <div class="logo-items flex">
+        <h3>m/m</h3>
+        <i class="fa-solid fa-xmark" id="sidebar-close"></i>
+      </div>
+      <br />
+      <div class="menu_container">
+        <div class="menu-items">
+          <ul class="menu_item">
+            <li class="item">
+              <a href="../Dashboard/index.php" class="link flex">
+                <i class="fa-solid fa-house"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Goals/goals.php" class="link flex">
+                <i class="fa-solid fa-coins"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Investment/Investment.html" class="link flex">
+                <i class="fa-solid fa-chart-line"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Education/index.html" class="link flex">
+                <i class="fa-solid fa-laptop-file"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Expenses/Expense Log.html" class="link flex">
+                <i class="fa-solid fa-sack-dollar"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="header">
+        <h1>Recommended stocks</h1>
+        <div class="search-bar">
+          <input
+            type="text"
+            class="search-input"
+            id="searchStock"
+            placeholder="Search Stocks..."
+          />
+          <button class="search-button" onclick="filterStocks()">Search</button>
+        </div>
+        <a href="#" class="view-link">View</a>
+      </div>
+
+      <div id="orders" class="orders" style="margin: 20px auto"></div>
+
+      <div class="chart-container">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">S&P 500</div>
+              <div class="chart-value">
+                4,500.48 <span class="chart-change">+1.66%</span>
+              </div>
+              <div class="chart-date">
+                Oct25, 5:26 pm UTC-5, INDEXSP Disclaimer
+              </div>
+            </div>
+          </div>
+          <div id="tradingview_widget"></div>
+          <div class="chart-tabs">
+            <div class="chart-tab">1d</div>
+            <div class="chart-tab">7d</div>
+            <div class="chart-tab active">1m</div>
+            <div class="chart-tab">1y</div>
+            <div class="chart-tab">Max</div>
+          </div>
+        </div>
+
+        <!--
+        <div class="details-card">
+          <div class="details-header">
+            <div class="details-title">S&P 500</div>
+            <div class="details-badge">24 hr</div>
+          </div>
+          <div class="details-item">
+            <span class="label">Previous Close</span>
+            <span id="previousClose">4,500.50</span>
+          </div>
+          <div class="details-item">
+            <span class="label">Day Range</span>
+            <span id="dayRange">3,588 - 5,415</span>
+          </div>
+          <div class="details-item">
+            <span class="label">Year Range</span>
+            <span id="yearRange">6,200 - 4,500</span>
+          </div>
+          <div class="details-item">
+            <span class="label">Market Cap</span>
+            <span id="marketCap">$90.3T USD</span>
+          </div>
+          <div class="details-item">
+            <span class="label">Volume</span>
+            <span id="volume">3,852,852</span>
+          </div>
+          <div class="details-item">
+            <span class="label">P/E Ratio</span>
+            <span id="peRatio">51.05</span>
+          </div>
+          <div class="details-item">
+            <span class="label">Primary Exchange</span>
+            <span id="primaryExchange">Index</span>
+          </div>
+
+          
+          <div class="market-cap-chart">
+            <div style="font-weight: bold; margin-bottom: 10px">Market Cap</div>
+            <canvas id="marketCapChart"></canvas>
+          -->
+          </div>
+        </div>
+      </div>
+
+      <div class="buy-sell-buttons">
+        <button class="buy-button" onclick="buyShares()">Buy Shares</button>
+        <button class="sell-button" onclick="sellShares()">Sell Shares</button>
+        <button class="crud-button" onclick="addStock()">Add Stock</button>
+        <button class="crud-button" onclick="updateStock()">
+          Update Stock
+        </button>
+        <button class="crud-button delete" onclick="deleteStock()">
+          Delete Stock
+        </button>
+      </div>
+
+      <div class="crud-buttons"></div>
+    </div>
+    <script
+      type="text/javascript"
+      src="https://s3.tradingview.com/tv.js"
+    ></script>
+
+    <script type="text/javascript">
+      // Alpha Vantage API
+      const ALPHA_VANTAGE_API_KEY = "JWBVQSCB88KV3C5V";
+      const stockSymbols = {
+        AAPL: "Apple Inc",
+        NDAQ: "Nasdaq Inc",
+        TSLA: "Tesla Inc",
+        AMZN: "Amazon Inc",
+      };
+
+      // Initial stocks data
+      let stocks = [
+        {
+          id: 1,
+          name: "Apple Inc",
+          symbol: "AAPL",
+          value: 15215.7,
+          change: 0.66,
+          positive: true,
+          icon: "🍎",
+          color: "#000",
+        },
+        {
+          id: 2,
+          name: "Nasdaq Inc",
+          symbol: "NDAQ",
+          value: 15120.2,
+          change: -0.28,
+          positive: false,
+          icon: "N",
+          color: "#ff4081",
+        },
+        {
+          id: 3,
+          name: "Tesla Inc",
+          symbol: "TSLA",
+          value: 10225.4,
+          change: 1.66,
+          positive: true,
+          icon: "T",
+          color: "#7c4dff",
+        },
+        {
+          id: 4,
+          name: "Amazon Inc",
+          symbol: "AMZN",
+          value: 40500.2,
+          change: 2.56,
+          positive: true,
+          icon: "a",
+          color: "#ffa000",
+        },
+      ];
+
+      // fetch real-time stock data from Alpha Vantage
+      async function fetchStockData(symbol) {
+        try {
+          const response = await fetch(
+            `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${ALPHA_VANTAGE_API_KEY}`
+          );
+          const data = await response.json();
+
+          if (data["Global Quote"]) {
+            return {
+              price: parseFloat(data["Global Quote"]["05. price"]).toFixed(2),
+              change: parseFloat(data["Global Quote"]["09. change"]).toFixed(2),
+              changePercent: data["Global Quote"]["10. change percent"],
+              volume: data["Global Quote"]["06. volume"],
+            };
+          }
+          throw new Error("No data available");
+        } catch (error) {
+          console.error(`Error fetching data for ${symbol}:`, error);
+          return null;
+        }
+      }
+
+      // Function to update stock data
+      async function updateStockData(symbol) {
+        try {
+          const data = await fetchStockData(symbol);
+          if (data) {
+            const stockIndex = stocks.findIndex(
+              (stock) => stock.symbol === symbol
+            );
+            if (stockIndex !== -1) {
+              stocks[stockIndex].value = parseFloat(data.price);
+              stocks[stockIndex].change = parseFloat(data.changePercent);
+              stocks[stockIndex].positive = parseFloat(data.change) >= 0;
+            }
+            return data;
+          }
+        } catch (error) {
+          console.error(`Error updating ${symbol}:`, error);
+        }
+        return null;
+      }
+
+      // Function to update UI with real-time data
+      async function updateUI() {
+        const cards = document.querySelectorAll(".order-card");
+
+        for (const card of cards) {
+          const symbolElement = card.querySelector("h3");
+
+          if (symbolElement) {
+            const symbolText = symbolElement.innerText;
+            const symbolParts = symbolText.split(" ");
+            const symbol = symbolParts[1] ? symbolParts[1].toUpperCase() : null;
+
+            if (symbol && stockSymbols[symbol]) {
+              const stockData = await updateStockData(symbol);
+
+              if (stockData) {
+                card.querySelector(".value").innerText = stockData.price;
+                const changeElement = card.querySelector(".change");
+                const changeValue = parseFloat(stockData.changePercent);
+                changeElement.innerText = `${symbol} ${
+                  changeValue >= 0 ? "+" : ""
+                }${stockData.changePercent}`;
+                changeElement.classList.remove("positive", "negative");
+                changeElement.classList.add(
+                  changeValue >= 0 ? "positive" : "negative"
+                );
+              }
+            }
+          }
+        }
+      }
+
+      // Function to render stocks in the DOM
+      async function renderStocks(stocksToRender = stocks) {
+        const ordersDiv = document.getElementById("orders");
+        ordersDiv.innerHTML = "";
+
+        for (const stock of stocksToRender) {
+          const stockData = await fetchStockData(stock.symbol);
+          if (stockData) {
+            const orderCard = document.createElement("div");
+            orderCard.classList.add("order-card");
+            orderCard.innerHTML = `
+        <h3>
+          <span class="icon" style="background-color: ${stock.color}">${
+              stock.icon
+            }</span> 
+          ${stock.name}
+        </h3>
+        <div class="value">${stockData.price}</div>
+        <div class="change ${
+          parseFloat(stockData.change) >= 0 ? "positive" : "negative"
+        }">
+          ${stock.symbol} ${
+              parseFloat(stockData.changePercent) >= 0 ? "+" : ""
+            }${stockData.changePercent}
+        </div>
+      `;
+            ordersDiv.appendChild(orderCard);
+          }
+        }
+      }
+
+      // Search functionality
+      function filterStocks() {
+        const searchInput = document
+          .getElementById("searchStock")
+          .value.toLowerCase();
+        const filteredStocks = stocks.filter(
+          (stock) =>
+            stock.name.toLowerCase().includes(searchInput) ||
+            stock.symbol.toLowerCase().includes(searchInput)
+        );
+        renderStocks(filteredStocks);
+      }
+
+      // CRUD operations
+      function addStock() {
+        const newStock = {
+          id: stocks.length + 1,
+          name: "New Stock Inc",
+          symbol: "NSI",
+          value: 10000.0,
+          change: 1.23,
+          positive: true,
+          icon: "📈",
+          color: "#333",
+        };
+        stocks.push(newStock);
+        renderStocks();
+      }
+
+      function updateStock() {
+        if (stocks.length > 0) {
+          updateUI();
+        } else {
+          alert("No stocks available to update.");
+        }
+      }
+
+      function deleteStock() {
+        if (stocks.length > 0) {
+          stocks.splice(0, 1);
+          renderStocks();
+        } else {
+          alert("No stocks available to delete.");
+        }
+      }
+
+      // Buy and Sell functionality
+      function buyShares() {
+        window.location.href = "BUY SHARES/index.html";
+      }
+
+      function sellShares() {
+        window.location.href = "BUY SHARES/index.html";
+      }
+
+      // Trading View Widget configuration
+      function initTradingViewWidget() {
+        new TradingView.widget({
+          width: "100%",
+          height: 400,
+          symbol: "NASDAQ:AAPL",
+          interval: "D",
+          timezone: "Etc/UTC",
+          theme: "light",
+          style: "1",
+          locale: "en",
+          toolbar_bg: "#f1f3f6",
+          enable_publishing: false,
+          withdateranges: true,
+          hide_side_toolbar: false,
+          allow_symbol_change: true,
+          details: true,
+          studies: false,
+          container_id: "tradingview_widget",
+        });
+      }
+
+      // Market Cap Chart initialization
+      function initMarketCapChart() {
+        const marketCapCtx = document
+          .getElementById("marketCapChart")
+          .getContext("2d");
+        new Chart(marketCapCtx, {
+          type: "bar",
+          data: {
+            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            datasets: [
+              {
+                label: "Market Cap",
+                data: [30, 35, 40, 50, 60, 55, 40],
+                backgroundColor: "rgba(75, 192, 192, 0.6)",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function (value) {
+                    return "$" + value + "B";
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // Initialize everything when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initial render
+        renderStocks();
+
+        // Start real-time updates
+        updateUI();
+        setInterval(updateUI, 60000); // Update every minute
+
+        // Initialize TradingView widget
+        initTradingViewWidget();
+
+        // Initialize Market Cap Chart
+        initMarketCapChart();
+
+        // Initialize details card with sample data
+        const sampleData = {
+          previousClose: "4,500.50",
+          dayRange: "3,588 - 5,415",
+          yearRange: "6,200 - 4,500",
+          marketCap: "$90.3T USD",
+          volume: "3,852,852",
+          peRatio: "51.05",
+          primaryExchange: "Index",
+        };
+
+        // Update details card
+        document.getElementById("previousClose").textContent =
+          sampleData.previousClose;
+        document.getElementById("dayRange").textContent = sampleData.dayRange;
+        document.getElementById("yearRange").textContent = sampleData.yearRange;
+        document.getElementById("marketCap").textContent = sampleData.marketCap;
+        document.getElementById("volume").textContent = sampleData.volume;
+        document.getElementById("peRatio").textContent = sampleData.peRatio;
+        document.getElementById("primaryExchange").textContent =
+          sampleData.primaryExchange;
+      });
+    </script>
+  </body>
+</html>

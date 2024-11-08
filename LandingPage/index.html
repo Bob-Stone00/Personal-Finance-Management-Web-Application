@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Finance App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body>
+    <!-- Header and Navbar -->
+    <div class="bg-pic">
+      <header>
+        <div class="logo">
+          <h1>MoneyMap</h1>
+        </div>
+        <nav class="navbar">
+          <ul>
+            <li><a href="#hero"></a></li>
+            <li><a href="#features"></a></li>
+            <li><a href="#dashboard-preview"></a></li>
+          </ul>
+        </nav>
+        <div class="buttons">
+          <button class="login" id="login">Login</button>
+          <button class="signup" id="signup">Sign up</button>
+        </div>
+        <button class="menu-toggle">☰</button>
+      </header>
+
+      <!-- Hero Section -->
+      <section id="hero" class="hero">
+        <div class="hero-content">
+          <h1>Take Control of Your Finances</h1>
+          <p>A Personal Finance App to Plan, Track, and Grow Your Wealth</p>
+          <button class="btn" id="getStarted">Get Started</button>
+          <!-- <button class="cta secondary">Learn More</button> -->
+        </div>
+      </section>
+    </div>
+    <!-- Features Section -->
+    <section id="features" class="features">
+      <div class="feature-card">
+        <i class="fa-solid fa-sack-dollar"></i>
+        <h3>Budget Tracking</h3>
+        <p>Manage your budget and stay on track with ease.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fa-solid fa-receipt"></i>
+        <h3>Expense Analysis</h3>
+        <p>Analyze your spending habits with detailed insights.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fa-solid fa-bullseye"></i>
+        <h3>Goal Planning</h3>
+        <p>Set financial goals and track your progress over time.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fa-solid fa-business-time"></i>
+        <h3>Real-time Insights</h3>
+        <p>Get up-to-date financial insights instantly.</p>
+      </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section id="dashboard-preview" class="dashboard-preview">
+      <h2>Powerful Dashboard</h2>
+      <p>See a comprehensive view of your finances all in one place.</p>
+      <img src="images/Screenshot (333).png" alt="Dashboard Preview" />
+    </section>
+
+    <section id="stock-prices" class="stock-prices">
+      <h2>Live Market Prices for various crpto/stocks/commodities</h2>
+      <div class="stock-grid">
+        <div class="stock-card">
+          <img src="images/bitcoin.png" alt="Bitcoin Logo" class="stock-logo" />
+          <h3>Bitcoin</h3>
+          <p class="price"></p>
+          <p class="change positive">%</p>
+        </div>
+        <div class="stock-card">
+          <img src="images/eth.jpeg" alt="Ethereum Logo" class="stock-logo" />
+          <h3>Ethereum</h3>
+          <p class="price"></p>
+          <p class="change negative">%</p>
+        </div>
+        <div class="stock-card">
+          <img
+            src="images/litecoin.jpeg"
+            alt="Litecoin Logo"
+            class="stock-logo"
+          />
+          <h3>Litecoin</h3>
+          <p class="price"></p>
+          <p class="change positive">%</p>
+        </div>
+        <div class="stock-card">
+          <img
+            src="images/cardano.jpeg"
+            alt="Cardano Logo"
+            class="stock-logo"
+          />
+          <h3>Cardano</h3>
+          <p class="price"></p>
+          <p class="change positive">%</p>
+        </div>
+      </div>
+    </section>
+    <section id="financial-insights" class="financial-insights">
+      <h2>Financial Insights</h2>
+      <div class="insight-grid">
+        <div class="insight-card">
+          <h3>Smart Budgeting Tips</h3>
+          <p>
+            Learn how to create a sustainable budget that aligns with your
+            goals.
+          </p>
+          <a href="#" class="read-more">Read More</a>
+        </div>
+        <div class="insight-card">
+          <h3>Getting Started with Crypto</h3>
+          <p>
+            Explore the basics of cryptocurrency investing and what to consider.
+          </p>
+          <a href="#" class="read-more">Read More</a>
+        </div>
+        <div class="insight-card">
+          <h3>Investing 101</h3>
+          <p>Beginner’s guide to building a strong investment portfolio.</p>
+          <a href="#" class="read-more">Read More</a>
+        </div>
+        <div class="insight-card">
+          <h3>Understanding Market Trends</h3>
+          <p>
+            Stay updated on the latest market trends and their impact on your
+            finances.
+          </p>
+          <a href="#" class="read-more">Read More</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="social-media">
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+      <div class="copy-right">&copy; 2024 BSc IT Group 5</div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,195 @@
+.navbar {
+    background-color: rgb(7, 7, 7);
+}
+
+.middle {
+    margin-top: 100px;
+    margin-bottom: 40px;
+}
+
+.middle h1 {
+    font-weight: bolder;
+    color: rgb(7, 7, 7);
+    ;
+}
+
+.middle p {
+    margin-top: 50px;
+    font-size: smaller;
+}
+
+.card {
+    max-width: 100%;
+    margin-left: 20px;
+    box-shadow: 0 1px 10px 1px rgba(131, 127, 127, 0.527);
+}
+
+.card-body {
+    margin-left: -200px;
+}
+
+.orange {
+    background-color: rgb(253, 95, 4);
+}
+
+.container img {
+    width: 250px;
+    height: 240px;
+}
+
+.footer {
+    color: white;
+    margin-top: 80px;
+    padding-top: 50px;
+    background-color: rgb(7, 7, 7);
+    /* padding-bottom: 150px; */
+}
+
+.footer .container {
+    padding-bottom: 35px;
+}
+
+.footer p {
+    font-size: smaller;
+    padding-top: 10px;
+
+}
+
+.foot {
+    font-family: "Teko", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    margin-left: 0px;
+    font-size: x-large;
+}
+
+.fot {
+
+    display: flex;
+    flex-direction: column;
+}
+
+.fot span {
+    font-family: "Teko", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    margin-left: 10px;
+    font-size: x-large;
+
+}
+
+.fot a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    font-size: smaller;
+    margin-left: 10px;
+    padding-top: 20px;
+}
+
+.bas {
+    margin-top: -20px;
+    height: 90px;
+    background-color: rgb(7, 7, 7);
+    /* background-color: black; 
+     border: 5px solid rgb(53, 53, 53);  */
+    border-top: 1px solid rgba(255, 250, 250, 0.589);
+    border-bottom: 1px solid rgba(255, 250, 250, 0.589);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-size: small;
+}
+
+@media(max-width:574px) {
+    .container-fluid svg {
+        width: 11px;
+        height: 11px;
+    }
+
+
+    .card {
+        max-width: 700px;
+        height: 120px;
+    }
+
+    .card img {
+        width: 120px;
+
+    }
+
+    .card-body {
+        margin-left: 120px;
+    }
+
+    .card-body h5 {
+        font-size: smaller;
+        margin-top: -133px;
+
+    }
+
+    .card-body p {
+        font-size: xx-small;
+    }
+
+    .sizing {
+        width: 100px;
+        height: 25px;
+        margin-top: -15px;
+        font-size: xx-small;
+    }
+
+    .sizing svg {
+        width: 10px;
+        height: 10px;
+    }
+
+    .orange {
+        width: 100px;
+        height: 25px;
+        margin-top: -15px;
+        font-size: xx-small;
+    }
+
+    .orange svg {
+        width: 10px;
+        height: 10px;
+    }
+
+    .middle {
+        margin-top: 70px;
+    }
+
+    .middle h1 {
+        font-size: 45px;
+
+    }
+
+    .middle p {
+        margin-top: 30px;
+        font-size: 10px;
+    }
+
+    .container img {
+        width: 100px;
+        height: 90px;
+    }
+
+    .shift1 {
+        transform: translateX(-100px);
+    }
+
+    .shift2 {
+        margin-top: -90px;
+    }
+
+    .shift3 {
+        transform: translateX(100px);
+        margin-top: -90px;
+    }
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Finance Profile</title>
+    <link rel="stylesheet" href="profile.css" />
+    <!-- Link to the CSS file -->
+  </head>
+  <body>
+    <section class="navigation">
+      <button onclick="history.back()">Go Back</button>
+    </section>
+
+    <div class="profile-container">
+      <!-- Profile Information Section -->
+      <section class="profile-info">
+        <h2>Profile Information hello</h2>
+        <!-- Profile Picture -->
+        <label class="file-label" for="fileInput"
+          >Click here to upload a picture</label
+        >
+        <input
+          type="file"
+          id="fileInput"
+          accept="image/*"
+          onchange="previewImage(event)"
+        />
+        <!-- File Input -->
+        <p>Name: <span id="profileName">John Doe</span></p>
+        <p>Email: <span id="profileEmail">john.doe@example.com</span></p>
+        <button onclick="toggleEditFields()">Edit Profile</button>
+        <div class="edit-fields" id="editFields">
+          <input type="text" id="newName" placeholder="Enter your other name" />
+          <input
+            type="email"
+            id="newEmail"
+            placeholder="Enter your new email"
+          />
+          <button onclick="saveProfile()">Save Changes</button>
+          <h1>Hello</h1>
+        </div>
+      </section>
+
+      <!-- Logout Button -->
+      <section class="logout">
+        <button onclick="logoutUser()">Logout</button>
+      </section>
+    </div>
+
+    <script src="profile.js"></script>
+    <!-- Link to JavaScript file -->
+  </body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracking</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../Dashboard/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f0f0f0;
+        font-size: 16px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      h1,
+      h2 {
+        color: #333;
+      }
+      .dashboard {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .chart-container {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 300px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .expense-form,
+      .budget-section {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      .submit-btn,
+      .edit-btn {
+        background-color: black;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .submit-btn {
+        width: 100%;
+      }
+      .submit-btn:hover,
+      .edit-btn:hover {
+        background-color: blue;
+      }
+      .alert {
+        background-color: #f44336;
+        color: white;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+      }
+      .budget-display {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+      .budget-amount {
+        font-weight: bold;
+      }
+      #budgetInput {
+        display: none;
+        width: 200px;
+        margin-right: 10px;
+      }
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+        .container {
+          padding: 10px;
+        }
+        .chart-container {
+          flex: 1 1 100%;
+        }
+        .form-group label {
+          font-size: 14px;
+        }
+        .form-group input,
+        .form-group select,
+        .submit-btn,
+        .edit-btn {
+          font-size: 14px;
+          padding: 8px;
+        }
+        h1 {
+          font-size: 24px;
+        }
+        h2 {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="sidebar show-sidebar">
+      <div class="logo-items flex">
+        <h3>m/m</h3>
+        <i class="fa-solid fa-xmark" id="sidebar-close"></i>
+      </div>
+      <br />
+      <div class="menu_container">
+        <div class="menu-items">
+          <ul class="menu_item">
+            <li class="item">
+              <a href="../Dashboard/index.php" class="link flex">
+                <i class="fa-solid fa-house"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Goals/goals.php" class="link flex">
+                <i class="fa-solid fa-coins"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Investment/Investment.html" class="link flex">
+                <i class="fa-solid fa-chart-line"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Education/index.html" class="link flex">
+                <i class="fa-solid fa-laptop-file"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Expenses/Expense Log.html" class="link flex">
+                <i class="fa-solid fa-sack-dollar"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h1>Expense Tracking</h1>
+
+      <div class="budget-section">
+        <h2>Budget</h2>
+        <div class="budget-display">
+          Total Budget: R<span id="totalBudget" class="budget-amount">300</span>
+        </div>
+        <div class="budget-display">
+          Remaining Budget: R<span id="remainingBudget" class="budget-amount"
+            >300</span
+          >
+        </div>
+        <div class="budget-progress">
+          <div id="budgetBar" class="budget-bar safe"></div>
+        </div>
+        <input
+          type="number"
+          id="budgetInput"
+          placeholder="Enter new budget"
+          style="display: none"
+        />
+        <button id="editBudgetBtn" class="edit-btn">Edit Budget</button>
+      </div>
+
+      <div id="budgetAlert" class="alert alert-danger">
+        You have exceeded your budget limit!
+      </div>
+
+      <div id="budgetWarning" class="alert alert-warning">
+        Warning: You have used 50% of your budget!
+      </div>
+
+      <div class="expense-form">
+        <h2>Enter Expense</h2>
+        <form id="expenseForm">
+          <input type="hidden" id="expenseId" name="id" />
+          <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required />
+          </div>
+          <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required />
+          </div>
+          <div class="form-group">
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" required />
+          </div>
+          <div class="form-group">
+            <label for="icon">Category Icon:</label>
+            <select id="icon" name="icon" required>
+              <option value="🍔">Food</option>
+              <option value="🚗">Transportation</option>
+              <option value="🎬">Entertainment</option>
+              <option value="💡">Utilities</option>
+              <option value="📦">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required />
+          </div>
+          <button type="submit" class="submit-btn">Add Expense</button>
+        </form>
+      </div>
+
+      <div class="dashboard">
+        <div class="chart-container">
+          <canvas id="pieChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Global variables
+      let expenses = [];
+      let budgetLimit = 300;
+      let pieChart, barChart;
+      let budgetInputElement, editBudgetBtn;
+
+      // Initialize everything when the DOM is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeEventListeners();
+        fetchBudget();
+        fetchExpenses();
+      });
+
+      // Budget related functions
+      function fetchBudget() {
+        fetch("../transactions.php?type=budget")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.budget !== undefined) {
+              budgetLimit = parseFloat(data.budget);
+              updateBudgetDisplay();
+            } else {
+              console.error("Budget data not found in response:", data);
+            }
+          })
+          .catch((error) => console.error("Error fetching budget:", error));
+      }
+
+      function updateBudget(newBudget) {
+        fetch("../transactions.php", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ budget: newBudget }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              budgetLimit = newBudget;
+              updateBudgetDisplay();
+            } else {
+              alert("Error updating budget");
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // Expense related functions
+      function fetchExpenses() {
+        fetch("../transactions.php")
+          .then((response) => response.json())
+          .then((data) => {
+            expenses = data;
+            updateCharts();
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      function saveExpense(formData) {
+        fetch("../transactions.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              fetchExpenses();
+              document.getElementById("expenseForm").reset();
+              // Set default date again after form reset
+              document.getElementById("date").valueAsDate = new Date();
+            } else {
+              alert("Error saving expense");
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      function deleteExpense(id) {
+        fetch(`../transactions.php?id=${id}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              fetchExpenses();
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // UI Update functions
+      function updateBudgetProgress(totalExpenses) {
+        const percentUsed = (totalExpenses / budgetLimit) * 100;
+        const budgetBar = document.getElementById("budgetBar");
+        const warningAlert = document.getElementById("budgetWarning");
+        const dangerAlert = document.getElementById("budgetAlert");
+
+        // Update progress bar
+        budgetBar.style.width = Math.min(percentUsed, 100) + "%";
+
+        // Update progress bar color and show/hide alerts
+        if (percentUsed >= 100) {
+          budgetBar.className = "budget-bar danger";
+          dangerAlert.style.display = "block";
+          warningAlert.style.display = "none";
+        } else if (percentUsed >= 50) {
+          budgetBar.className = "budget-bar warning";
+          dangerAlert.style.display = "none";
+          warningAlert.style.display = "block";
+        } else {
+          budgetBar.className = "budget-bar safe";
+          dangerAlert.style.display = "none";
+          warningAlert.style.display = "none";
+        }
+      }
+
+      function updateBudgetDisplay() {
+        const totalExpenses = expenses.reduce(
+          (total, expense) => total + parseFloat(expense.amount),
+          0
+        );
+        const remainingBudget = Math.max(budgetLimit - totalExpenses, 0);
+
+        document.getElementById("totalBudget").textContent =
+          budgetLimit.toFixed(2);
+        document.getElementById("remainingBudget").textContent =
+          remainingBudget.toFixed(2);
+
+        // Update budget progress bar and alerts
+        updateBudgetProgress(totalExpenses);
+      }
+
+      // Chart related functions
+      function updateCharts() {
+        updatePieChart();
+        updateBarChart();
+        updateBudgetDisplay();
+      }
+
+      function updatePieChart() {
+        const ctx = document.getElementById("pieChart").getContext("2d");
+        const categoryTotals = expenses.reduce((acc, expense) => {
+          const category = expense.icon;
+          acc[category] = (acc[category] || 0) + parseFloat(expense.amount);
+          return acc;
+        }, {});
+
+        const data = {
+          labels: Object.keys(categoryTotals),
+          datasets: [
+            {
+              data: Object.values(categoryTotals),
+              backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                "#4BC0C0",
+                "#9966FF",
+              ],
+            },
+          ],
+        };
+
+        if (pieChart) {
+          pieChart.destroy();
+        }
+        pieChart = new Chart(ctx, {
+          type: "pie",
+          data: data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              title: {
+                display: true,
+                text: "Expense Distribution by Category",
+              },
+            },
+          },
+        });
+      }
+
+      function updateBarChart() {
+        const ctx = document.getElementById("barChart").getContext("2d");
+        const dailyTotals = expenses.reduce((acc, expense) => {
+          acc[expense.date] =
+            (acc[expense.date] || 0) + parseFloat(expense.amount);
+          return acc;
+        }, {});
+
+        const sortedDates = Object.keys(dailyTotals).sort();
+
+        const data = {
+          labels: sortedDates,
+          datasets: [
+            {
+              label: "Daily Expenses",
+              data: sortedDates.map((date) => dailyTotals[date]),
+              backgroundColor: "#36A2EB",
+            },
+          ],
+        };
+
+        if (barChart) {
+          barChart.destroy();
+        }
+        barChart = new Chart(ctx, {
+          type: "bar",
+          data: data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      }
+
+      // Event Listeners initialization
+      function initializeEventListeners() {
+        // Initialize DOM element references
+        budgetInputElement = document.getElementById("budgetInput");
+        editBudgetBtn = document.getElementById("editBudgetBtn");
+
+        // Budget edit button listener
+        editBudgetBtn.addEventListener("click", function () {
+          if (budgetInputElement.style.display === "none") {
+            budgetInputElement.style.display = "inline-block";
+            budgetInputElement.value = budgetLimit;
+            this.textContent = "Save Budget";
+          } else {
+            const newBudget = parseFloat(budgetInputElement.value);
+            if (!isNaN(newBudget) && newBudget > 0) {
+              updateBudget(newBudget);
+              budgetInputElement.style.display = "none";
+              this.textContent = "Edit Budget";
+            } else {
+              alert("Please enter a valid budget amount.");
+            }
+          }
+        });
+
+        // Expense form submit listener
+        document
+          .getElementById("expenseForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            saveExpense(formData);
+          });
+
+        // Set default date to today
+        document.getElementById("date").valueAsDate = new Date();
+
+        // Window resize listener for charts
+        window.addEventListener("resize", updateCharts);
+      }
+    </script>
+  </body>
+</html>

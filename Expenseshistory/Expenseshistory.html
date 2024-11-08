@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transactions History</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../Dashboard/style.css" />
+    <style>
+      /* Base styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }
+
+      
+
+      /* Main container */
+      .container {
+        margin-left: 70px;
+        padding: 1rem;
+        max-width: 1200px;
+        margin: 0 auto ;
+      }
+
+      /* Header section */
+      .header {
+        background: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .header-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .view-all,
+      .add-transaction {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding: 0.75rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+
+      /* Search bar */
+      .search-bar {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+      }
+
+      /* Transaction cards */
+      .transaction {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .transaction-icon {
+        width: 48px;
+        height: 48px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      .transaction-details {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .transaction-title {
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+      }
+
+      .transaction-description {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .transaction-amount {
+        font-weight: bold;
+        color: #d00;
+        margin-bottom: 0.25rem;
+      }
+
+      .transaction-date {
+        color: #666;
+        font-size: 0.85rem;
+      }
+
+      .transaction-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .edit-btn,
+      .delete-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: white;
+      }
+
+      .edit-btn {
+        background-color: #4caf50;
+      }
+
+      .delete-btn {
+        background-color: #f44336;
+      }
+
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 1rem;
+      }
+
+      .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        width: 100%;
+        max-width: 500px;
+        position: relative;
+      }
+
+      .close {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      /* Media Queries */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 60px;
+        }
+
+        .container {
+          margin-left: 60px;
+          padding: 0.75rem;
+        }
+
+        .header {
+          flex-direction: column;
+        }
+
+        .header h1 {
+          margin-bottom: 1rem;
+        }
+
+        .transaction {
+          padding: 0.75rem;
+        }
+
+        .transaction-icon {
+          width: 40px;
+          height: 40px;
+        }
+
+        .transaction-details {
+          min-width: 150px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .sidebar {
+          width: 50px;
+        }
+
+        .container {
+          margin-left: 50px;
+          padding: 0.5rem;
+        }
+
+        .header {
+          padding: 0.75rem;
+        }
+
+        .header-buttons {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .view-all,
+        .add-transaction {
+          width: 100%;
+          text-align: center;
+        }
+
+        .transaction {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .transaction-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .edit-btn,
+        .delete-btn {
+          flex: 1;
+          text-align: center;
+        }
+
+        .modal-content {
+          padding: 1rem;
+        }
+      }
+    </style>
+    </style>
+  </head>
+  <body>
+    <nav class="sidebar show-sidebar">
+      <div class="logo-items flex">
+        <h3>m/m</h3>
+        <i class="fa-solid fa-xmark" id="sidebar-close"></i>
+      </div>
+      <br />
+      <div class="menu_container">
+        <div class="menu-items">
+          <ul class="menu_item">
+            <li class="item">
+              <a href="../Dashboard/index.php" class="link flex">
+                <i class="fa-solid fa-house"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Goals/goals.php" class="link flex">
+                <i class="fa-solid fa-coins"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Investment/Investment.html" class="link flex">
+                <i class="fa-solid fa-chart-line"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Education/index.html" class="link flex">
+                <i class="fa-solid fa-laptop-file"></i>
+              </a>
+            </li>
+            <li class="item">
+              <a href="../Expenses/Expense Log.html" class="link flex">
+              <i class="fa-solid fa-sack-dollar"></i>
+
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="header">
+        <h1>Expenses History</h1>
+        <div>
+          <button class="view-all">View all</button>
+          <button class="add-transaction">Add Transaction</button>
+        </div>
+      </div>
+      <input
+        type="text"
+        class="search-bar"
+        placeholder="Search transactions..."
+      />
+      <div id="transactions-list">
+        <!-- Transactions will be dynamically added here -->
+      </div>
+    </div>
+
+    <!-- Modal for adding/editing transactions -->
+    <div id="transactionModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">Add Transaction</h2>
+        <form id="transactionForm">
+          <div class="form-group">
+            <label for="icon">Icon:</label>
+            <input type="text" id="icon" name="icon" required />
+          </div>
+          <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required />
+          </div>
+          <div class="form-group">
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" required />
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required />
+          </div>
+          <div class="form-group">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required />
+          </div>
+          <button type="submit" class="submit-btn">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+
+
+
+
+      let transactions = [];
+      let filteredTransactions = [];
+
+      const transactionsList = document.getElementById("transactions-list");
+      const modal = document.getElementById("transactionModal");
+      const closeBtn = document.getElementsByClassName("close")[0];
+      const addTransactionBtn = document.querySelector(".add-transaction");
+      const transactionForm = document.getElementById("transactionForm");
+      const modalTitle = document.getElementById("modalTitle");
+      const searchBar = document.querySelector(".search-bar");
+
+      let editingTransactionId = null;
+
+      // Add search functionality
+      searchBar.addEventListener("input", (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        
+        filteredTransactions = transactions.filter((transaction) => {
+          return (
+            transaction.title.toLowerCase().includes(searchTerm) ||
+            transaction.description.toLowerCase().includes(searchTerm) ||
+            transaction.amount.toString().includes(searchTerm) ||
+            formatDate(transaction.date).toLowerCase().includes(searchTerm)
+          );
+        });
+
+        renderTransactions(filteredTransactions);
+        
+        // If search is empty, show all transactions
+        if (!searchTerm) {
+          renderTransactions(transactions);
+        }
+      });
+
+      async function fetchTransactions() {
+        const response = await fetch("../transactions.php");
+        transactions = await response.json();
+        filteredTransactions = [...transactions]; // Initialize filtered transactions
+        console.log("Fetched Transactions:", transactions);
+        renderTransactions(transactions);
+      }
+
+      function renderTransactions(transactionsToRender) {
+        transactionsList.innerHTML = "";
+        
+        if (transactionsToRender.length === 0) {
+          // Show "No transactions found" message when there are no results
+          transactionsList.innerHTML = `
+            <div class="transaction" style="text-align: center; color: #666;">
+              No transactions found
+            </div>
+          `;
+          return;
+        }
+        
+        transactionsToRender.forEach((transaction) => {
+          const transactionElement = document.createElement("div");
+          transactionElement.className = "transaction";
+          const amount = parseFloat(transaction.amount);
+          transactionElement.innerHTML = `
+            <div class="transaction-icon">${transaction.icon}</div>
+            <div class="transaction-details">
+                <div class="transaction-title">${highlightSearchTerm(transaction.title)}</div>
+                <div class="transaction-description">${highlightSearchTerm(transaction.description)}</div>
+            </div>
+            <div class="transaction-info">
+                <div class="transaction-amount">R${amount.toFixed(2)}</div>
+                <div class="transaction-date">${formatDate(transaction.date)}</div>
+            </div>
+            <div class="transaction-actions">
+                <button class="edit-btn" data-id="${transaction.id}">Edit</button>
+                <button class="delete-btn" data-id="${transaction.id}">Reverse</button>
+            </div>
+          `;
+          transactionsList.appendChild(transactionElement);
+        });
+
+        document.querySelectorAll(".edit-btn").forEach((btn) => {
+          btn.addEventListener("click", () => editTransaction(btn.dataset.id));
+        });
+        document.querySelectorAll(".delete-btn").forEach((btn) => {
+          btn.addEventListener("click", () => deleteTransaction(btn.dataset.id));
+        });
+      }
+
+      // Function to highlight search terms in text
+      function highlightSearchTerm(text) {
+        const searchTerm = searchBar.value.toLowerCase();
+        if (!searchTerm) return text;
+
+        const regex = new RegExp(`(${searchTerm})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+      }
+
+      function formatDate(dateString) {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      }
+
+      async function addOrEditTransaction(e) {
+        e.preventDefault();
+        const formData = new FormData(transactionForm);
+        if (editingTransactionId) {
+          formData.append("id", editingTransactionId);
+        }
+        const response = await fetch("../transactions.php", {
+          method: "POST",
+          body: formData,
+        });
+        const result = await response.json();
+        if (result.success) {
+          fetchTransactions();
+          closeModal();
+        } else {
+          console.error("Error saving transaction:", result.error);
+        }
+      }
+
+      function editTransaction(id) {
+        const transaction = transactions.find(
+          (t) => t.id.toString() === id.toString()
+        );
+        
+        if (transaction) {
+          editingTransactionId = id;
+          document.getElementById("icon").value = transaction.icon;
+          document.getElementById("title").value = transaction.title;
+          document.getElementById("description").value = transaction.description;
+          document.getElementById("amount").value = transaction.amount;
+          document.getElementById("date").value = transaction.date;
+          modalTitle.textContent = "Edit Transaction";
+          openModal();
+        }
+      }
+
+      async function deleteTransaction(id) {
+        const response = await fetch(`../transactions.php?id=${id}`, {
+          method: "DELETE",
+        });
+        const result = await response.json();
+        if (result.success) {
+          fetchTransactions();
+          // Clear search field and show all transactions after deletion
+          searchBar.value = '';
+          renderTransactions(transactions);
+        }
+      }
+
+      function openModal() {
+        modal.classList.add("show");
+      }
+
+      function closeModal() {
+        modal.classList.remove("show");
+        editingTransactionId = null;
+        transactionForm.reset();
+      }
+
+      // Event Listeners
+      addTransactionBtn.addEventListener("click", () => {
+        modalTitle.textContent = "Add Transaction";
+        openModal();
+      });
+
+      closeBtn.addEventListener("click", closeModal);
+
+      window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          closeModal();
+        }
+      });
+
+      transactionForm.addEventListener("submit", addOrEditTransaction);
+
+      // Add clear search functionality when clicking "View all"
+      document.querySelector(".view-all").addEventListener("click", () => {
+        searchBar.value = "";
+        renderTransactions(transactions);
+      });
+
+      // Initial fetch
+      fetchTransactions();
+    </script>
+  </body>
+</html>
